@@ -1,0 +1,78 @@
+<div class="container blog-page animate-in" data-domfly-page="blog">
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">The Journal <span class="eyebrow-line"></span> Vol. 01 / 2026</span>
+      <h1>Ideas para una web<br /><em>más humana.</em></h1>
+      <p>
+        Diseño, datos y pequeños experimentos para convertir la curiosidad en productos que se
+        sienten vivos.
+      </p>
+      <a class="button button-primary" [routerLink]="['/blog', featured.slug]"
+        >Leer artículo destacado <span aria-hidden="true">↗</span></a
+      >
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="orbit orbit-one"></div>
+      <div class="orbit orbit-two"></div>
+      <div class="glass-tile tile-one"><span>✦</span><small>IDEAS IN MOTION</small></div>
+      <div class="glass-tile tile-two"><span>01</span><small>EXPLORE / CREATE</small></div>
+      <div class="art-disc"></div>
+    </div>
+  </section>
+
+  <div class="section-heading" data-domfly-anchor="blog-featured-heading">
+    <div>
+      <span class="eyebrow">Selección editorial</span>
+      <h2 class="section-title">En portada</h2>
+    </div>
+    <span class="issue">ISSUE 001 <span class="issue-line"></span> OCT 2026</span>
+  </div>
+
+  <a
+    class="featured-card surface-card"
+    [routerLink]="['/blog', featured.slug]"
+    data-domfly-anchor="blog-featured-card"
+  >
+    <div class="featured-visual">
+      <span class="featured-shape"></span><span class="featured-glyph">{{ featured.icon }}</span
+      ><span class="visual-caption">FORM & FUNCTION</span>
+    </div>
+    <div class="featured-content">
+      <span class="pill">{{ featured.category }}</span>
+      <h3>{{ featured.title }}</h3>
+      <p>{{ featured.excerpt }}</p>
+      <div class="card-footer">
+        <span
+          >{{ featured.author }} <span class="dot-separator">·</span> {{ featured.readTime }}</span
+        ><span class="arrow-round" aria-hidden="true">↗</span>
+      </div>
+    </div>
+  </a>
+
+  <div class="section-heading more-heading">
+    <div>
+      <span class="eyebrow">Sigue explorando</span>
+      <h2 class="section-title">Más lecturas</h2>
+    </div>
+    <span class="section-description">Perspectivas para crear con intención.</span>
+  </div>
+  <div class="article-grid" data-domfly-anchor="blog-article-grid">
+    @for (article of moreArticles; track article.slug) {
+      <a class="article-card surface-card" [routerLink]="['/blog', article.slug]">
+        <div class="article-visual" [class]="'theme-' + article.theme">
+          <span>{{ article.icon }}</span
+          ><small>JOURNAL / 0{{ $index + 2 }}</small>
+        </div>
+        <div class="article-content">
+          <span class="eyebrow">{{ article.category }}</span>
+          <h3>{{ article.title }}</h3>
+          <p>{{ article.excerpt }}</p>
+          <div class="article-footer">
+            <span>{{ article.date }} · {{ article.readTime }}</span
+            ><span aria-hidden="true">↗</span>
+          </div>
+        </div>
+      </a>
+    }
+  </div>
+</div>

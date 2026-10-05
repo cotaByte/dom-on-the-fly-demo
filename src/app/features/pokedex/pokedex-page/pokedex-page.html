@@ -1,0 +1,203 @@
+<div class="container pokedex-page animate-in" data-domfly-page="pokedex">
+  <header class="page-heading">
+    <div>
+      <span class="eyebrow">Data Explorer / PokéAPI</span>
+      <h1>La Pokédex, <span>en detalle.</span></h1>
+      <p>
+        Explora los 151 Pokémon originales. Busca, ordena y descubre cada especie sin salir de la
+        tabla.
+      </p>
+    </div>
+    <div class="heading-art" aria-hidden="true">
+      <div class="pokeball"><span></span></div>
+      <small>001 — 151</small>
+    </div>
+  </header>
+
+  <div class="stat-strip">
+    <div><strong>151</strong><span>Pokémon clásicos</span></div>
+    <div><strong>01</strong><span>Región original</span></div>
+    <div><strong>∞</strong><span>Formas de explorar</span></div>
+  </div>
+
+  <section
+    class="explorer surface-card"
+    aria-labelledby="explorer-title"
+    data-domfly-anchor="pokedex-table"
+  >
+    <div class="explorer-head" data-domfly-anchor="pokedex-toolbar">
+      <div>
+        <span class="eyebrow">Directorio</span>
+        <h2 id="explorer-title">Explorador Pokémon</h2>
+        <p>Datos en tiempo real de PokéAPI.</p>
+      </div>
+      <span class="source-pill"><span class="source-dot"></span> Fuente: PokéAPI</span>
+    </div>
+    <div class="toolbar">
+      <label class="search-field"
+        ><span class="sr-only">Buscar Pokémon</span><span aria-hidden="true">⌕</span
+        ><input
+          class="field"
+          type="search"
+          placeholder="Buscar por nombre o número..."
+          [value]="search()"
+          (input)="updateSearch($any($event.target).value)"
+      /></label>
+      <label class="sort-field"
+        ><span>Ordenar por</span
+        ><select class="field" [value]="sort()" (change)="updateSort($any($event.target).value)">
+          <option value="number">Número</option>
+          <option value="name">Nombre A–Z</option>
+        </select></label
+      >
+    </div>
+
+    @if (list.error()) {
+      <div class="empty-state" role="alert">
+        <strong>No se pudo cargar la Pokédex.</strong>
+        <p>Comprueba tu conexión e inténtalo de nuevo.</p>
+        <button class="button button-primary" type="button" (click)="list.reload()">
+          Reintentar
+        </button>
+      </div>
+    } @else if (!list.hasValue()) {
+      <div class="loading-state" role="status">
+        <span class="spinner"></span>Cargando Pokémon...
+      </div>
+    } @else {
+      <div class="explorer-body" [class.has-detail]="selectedId() !== null">
+        <div class="table-area">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Pokémon</th>
+                  <th scope="col">Región</th>
+                  <th scope="col"><span class="sr-only">Acción</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (pokemon of visible(); track pokemon.id) {
+                  <tr>
+                    <td class="number">{{ pokemon.id.toString().padStart(3, '0') }}</td>
+                    <td>
+                      <div class="pokemon-name">
+                        <span class="sprite"
+                          ><img [src]="spriteUrl(pokemon.id)" [alt]="''" loading="lazy" /></span
+                        ><strong>{{ displayName(pokemon.name) }}</strong>
+                      </div>
+                    </td>
+                    <td><span class="region-pill">Kanto</span></td>
+                    <td>
+                      <button
+                        class="details-button"
+                        type="button"
+                        (click)="selectPokemon(pokemon.id)"
+                        [attr.aria-label]="'Ver detalles de ' + displayName(pokemon.name)"
+                      >
+                        Ver detalles <span aria-hidden="true">↗</span>
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4" class="no-results">
+                      No hay Pokémon que coincidan con tu búsqueda.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination" data-domfly-anchor="pokedex-table-footer">
+            <span
+              >{{ filtered().length }} resultados · Página {{ page() }} de {{ pageCount() }}</span
+            >
+            <div>
+              <button
+                type="button"
+                [disabled]="page() === 1"
+                (click)="previousPage()"
+                aria-label="Página anterior"
+              >
+                ←</button
+              ><button
+                type="button"
+                [disabled]="page() === pageCount()"
+                (click)="nextPage()"
+                aria-label="Página siguiente"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        </div>
+        @if (selectedId() !== null) {
+          <aside
+            class="detail-panel"
+            aria-label="Detalle del Pokémon"
+            data-domfly-anchor="pokedex-detail"
+          >
+            <button
+              type="button"
+              class="close-detail"
+              (click)="closeDetails()"
+              aria-label="Cerrar detalle"
+            >
+              ×
+            </button>
+            @if (detail.error()) {
+              <div class="detail-message">
+                <strong>No se pudo cargar el detalle.</strong
+                ><button class="button button-quiet" type="button" (click)="detail.reload()">
+                  Reintentar
+                </button>
+              </div>
+            } @else if (detail.hasValue()) {
+              <div class="detail-visual">
+                <span class="detail-number"
+                  >#{{ detail.value().id.toString().padStart(3, '0') }}</span
+                ><img
+                  [src]="
+                    detail.value().sprites.other?.['official-artwork']?.front_default ||
+                    spriteUrl(detail.value().id)
+                  "
+                  [alt]="displayName(detail.value().name)"
+                /><span class="detail-orbit"></span>
+              </div>
+              <span class="eyebrow">Ficha Pokémon</span>
+              <h3>{{ displayName(detail.value().name) }}</h3>
+              <div class="type-list">
+                @for (entry of detail.value().types; track entry.slot) {
+                  <span>{{ displayName(entry.type.name) }}</span>
+                }
+              </div>
+              <div class="detail-stats">
+                <div>
+                  <span>Altura</span><strong>{{ detail.value().height / 10 }} m</strong>
+                </div>
+                <div>
+                  <span>Peso</span><strong>{{ detail.value().weight / 10 }} kg</strong>
+                </div>
+              </div>
+              <div class="ability">
+                <span>HABILIDADES</span>
+                <p>
+                  @for (entry of detail.value().abilities; track entry.ability.name) {
+                    {{ displayName(entry.ability.name) }}
+                    @if (!$last) {
+                      ·
+                    }
+                  }
+                </p>
+              </div>
+            } @else {
+              <div class="detail-message" role="status">Cargando detalles...</div>
+            }
+          </aside>
+        }
+      </div>
+    }
+  </section>
+</div>

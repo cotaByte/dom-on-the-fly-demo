@@ -1,0 +1,159 @@
+<div class="container mission-page animate-in" data-domfly-page="mission-control">
+  <header class="mission-heading">
+    <div>
+      <span class="eyebrow">Operations dashboard / Simulación</span>
+      <h1>Mission <span>Control.</span></h1>
+      <p>
+        Una vista de operaciones para seguir cada señal, decisión y momento de una misión ficticia.
+      </p>
+    </div>
+    <span class="mission-status"><span></span> SISTEMAS OPERATIVOS</span>
+  </header>
+
+  <section class="mission-hero" aria-labelledby="mission-title" data-domfly-anchor="mission-hero">
+    <div class="hero-info">
+      <span class="hero-kicker">MISIÓN ACTIVA <span>•</span> FLIGHT 07</span>
+      <h2 id="mission-title">Aurora <em>One</em></h2>
+      <p>Explorando nuevas perspectivas desde la órbita terrestre.</p>
+      <div class="hero-metadata">
+        <div><small>FASE ACTUAL</small><strong>Preparación orbital</strong></div>
+        <div><small>DESTINO</small><strong>Órbita terrestre baja</strong></div>
+      </div>
+    </div>
+    <div class="planet-art" aria-hidden="true">
+      <div class="orbit-ring orbit-ring-one"></div>
+      <div class="orbit-ring orbit-ring-two"></div>
+      <div class="planet"></div>
+      <div class="satellite">✦</div>
+      <span class="art-coordinate">51° 36′ 03″ N</span>
+    </div>
+    <span class="hero-index">01 / ACTIVE MISSIONS</span>
+  </section>
+
+  <div class="stats-grid" data-domfly-anchor="mission-status-grid">
+    <div class="stat-card surface-card">
+      <div class="stat-icon stat-blue">⌁</div>
+      <span>Integridad de señal</span><strong>98.7<small>%</small></strong>
+      <div class="stat-foot"><span class="good-dot"></span> Conexión estable</div>
+    </div>
+    <div class="stat-card surface-card">
+      <div class="stat-icon stat-cyan">◉</div>
+      <span>Sistemas activos</span><strong>06<small> / 06</small></strong>
+      <div class="stat-foot"><span class="good-dot"></span> Todos operativos</div>
+    </div>
+    <div class="stat-card surface-card">
+      <div class="stat-icon stat-violet">↗</div>
+      <span>Velocidad orbital</span><strong>7.66<small> km/s</small></strong>
+      <div class="stat-foot"><span class="trend">↗</span> En el rango previsto</div>
+    </div>
+    <div class="stat-card surface-card">
+      <div class="stat-icon stat-teal">◈</div>
+      <span>Estado de misión</span><strong class="status-value">En curso</strong>
+      <div class="stat-foot"><span class="good-dot"></span> Fase 03 de 05</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <section
+      class="task-card surface-card"
+      aria-labelledby="task-heading"
+      data-domfly-anchor="mission-task-panel"
+    >
+      <div class="card-heading">
+        <div>
+          <span class="eyebrow">Próximos pasos</span>
+          <h2 id="task-heading">Checklist de misión</h2>
+          <p>Completa los hitos para preparar la siguiente fase.</p>
+        </div>
+        <div
+          class="progress-ring"
+          [style.--progress]="progress() + '%'"
+          [attr.aria-label]="progress() + '% completado'"
+        >
+          <strong>{{ progress() }}%</strong>
+        </div>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <span [style.width.%]="progress()"></span>
+      </div>
+      <p class="progress-label" data-testid="task-progress">
+        {{ completedCount() }} de {{ tasks.length }} tareas completadas
+      </p>
+      <div class="task-list">
+        @for (task of tasks; track task.id) {
+          <button
+            class="task-row"
+            type="button"
+            [class.is-complete]="completed().has(task.id)"
+            [attr.aria-pressed]="completed().has(task.id)"
+            [attr.data-task-id]="task.id"
+            (click)="toggleTask(task.id)"
+          >
+            <span class="task-check" aria-hidden="true">
+              @if (completed().has(task.id)) {
+                ✓
+              }</span
+            ><span class="task-text"
+              ><strong>{{ task.title }}</strong
+              ><small>{{ task.description }}</small></span
+            ><time>{{ task.time }}</time>
+          </button>
+        }
+      </div>
+    </section>
+
+    <div class="side-column">
+      <section
+        class="telemetry-card surface-card"
+        aria-labelledby="telemetry-heading"
+        data-domfly-anchor="mission-telemetry"
+      >
+        <div class="small-card-heading">
+          <div>
+            <span class="eyebrow">Señal en directo</span>
+            <h2 id="telemetry-heading">Telemetría</h2>
+          </div>
+          <span class="mini-live"><span></span> LIVE</span>
+        </div>
+        <div class="chart" aria-label="Gráfico ilustrativo de la señal">
+          <div class="chart-grid"></div>
+          <div class="chart-bars">
+            <i style="--bar: 46%"></i><i style="--bar: 70%"></i><i style="--bar: 58%"></i
+            ><i style="--bar: 81%"></i><i style="--bar: 66%"></i><i style="--bar: 92%"></i
+            ><i style="--bar: 75%"></i><i style="--bar: 87%"></i><i style="--bar: 69%"></i
+            ><i style="--bar: 94%"></i><i style="--bar: 79%"></i><i style="--bar: 88%"></i>
+          </div>
+        </div>
+        <div class="chart-footer">
+          <span>00:00</span><span>Señal nominal</span><span>12:00</span>
+        </div>
+      </section>
+      <section
+        class="timeline-card surface-card"
+        aria-labelledby="timeline-heading"
+        data-domfly-anchor="mission-timeline"
+      >
+        <div class="small-card-heading">
+          <div>
+            <span class="eyebrow">Registro de actividad</span>
+            <h2 id="timeline-heading">Línea de tiempo</h2>
+          </div>
+        </div>
+        <ol class="timeline">
+          <li>
+            <span class="timeline-dot is-current"></span>
+            <div><strong>Órbita estabilizada</strong><small>Ahora · Fase 03</small></div>
+          </li>
+          <li>
+            <span class="timeline-dot"></span>
+            <div><strong>Separación completada</strong><small>08:34 UTC · Fase 02</small></div>
+          </li>
+          <li>
+            <span class="timeline-dot"></span>
+            <div><strong>Lanzamiento exitoso</strong><small>07:50 UTC · Fase 01</small></div>
+          </li>
+        </ol>
+      </section>
+    </div>
+  </div>
+</div>

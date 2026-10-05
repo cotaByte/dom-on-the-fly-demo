@@ -1,0 +1,56 @@
+@if (article(); as post) {
+  <article class="container article-page animate-in" data-domfly-page="blog-article">
+    <a class="back-link" routerLink="/blog"><span aria-hidden="true">←</span> Volver al blog</a>
+    <header class="article-header" data-domfly-anchor="article-header">
+      <span class="eyebrow"
+        >{{ post.category }} <span class="header-divider">/</span> The Journal</span
+      >
+      <h1>{{ post.title }}</h1>
+      <p class="lede">{{ post.excerpt }}</p>
+      <div class="byline">
+        <div class="avatar" aria-hidden="true">{{ post.author.charAt(0) }}</div>
+        <div>
+          <strong>{{ post.author }}</strong
+          ><span>{{ post.date }} <span aria-hidden="true">·</span> {{ post.readTime }}</span>
+        </div>
+      </div>
+    </header>
+    <div class="article-banner" [class]="'theme-' + post.theme" aria-hidden="true">
+      <span class="banner-glyph">{{ post.icon }}</span
+      ><span class="banner-label">DOM ON THE FLY / JOURNAL</span><span class="banner-ring"></span>
+    </div>
+    <div class="article-layout">
+      <aside class="article-aside">
+        <span>EN ESTE ARTÍCULO</span>
+        <nav aria-label="Secciones del artículo">
+          @for (section of post.sections; track section.heading; let i = $index) {
+            <a [routerLink]="[]" [fragment]="'section-' + i">{{ section.heading }}</a>
+          }
+        </nav>
+      </aside>
+      <div class="article-body" data-domfly-anchor="article-body">
+        @for (section of post.sections; track section.heading; let i = $index) {
+          <section [id]="'section-' + i">
+            <h2>{{ section.heading }}</h2>
+            @for (paragraph of section.paragraphs; track paragraph) {
+              <p>{{ paragraph }}</p>
+            }
+          </section>
+        }
+        <div class="article-end" data-domfly-anchor="article-body-end">
+          <span>✦</span><strong>Gracias por leer.</strong>
+          <p>Las mejores ideas empiezan con una pregunta.</p>
+        </div>
+      </div>
+    </div>
+    <a class="button button-quiet more-link" routerLink="/blog"
+      >Explorar más artículos <span aria-hidden="true">→</span></a
+    >
+  </article>
+} @else {
+  <div class="container not-found">
+    <span class="eyebrow">404 / THE JOURNAL</span>
+    <h1>Este artículo no existe.</h1>
+    <a class="button button-primary" routerLink="/blog">Volver al blog</a>
+  </div>
+}
